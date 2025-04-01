@@ -4,7 +4,9 @@ import Navbar1 from './Components/Navbar/navbar';
 import Signup from './Components/Authentication/Signup/signup';
 import Login from './Components/Authentication/Login/login';
 import Home from './Components/Home/Home';
-// import Dashboard from './Components/Dashboard/dashboard';
+import Dashboard from './Components/Dashboard/dashboard';
+import MemoryAlbum from './Components/Dashboard/memory_album';
+import EventAlbum from './Components/Dashboard/event_album';
 import { onAuthStateChanged } from 'firebase/auth';
 import { author } from './authconfig';
 
@@ -39,8 +41,9 @@ const App = () => {
 
       <Routes>
         <Route path="/home" element={<Home />} />
-        {/* <Route path='/dashboard' element={user ? <Dashboard/> : <Navigate to={'/login'}/>}/> */}
-
+        <Route path='/dashboard' element={user ? <Dashboard/> : <Navigate to={'/login'}/>}/>
+        <Route path="/memory-album" element={<MemoryAlbum />} />
+        <Route path="/event-album" element={<EventAlbum />} />
       </Routes>
     </div>
   );
