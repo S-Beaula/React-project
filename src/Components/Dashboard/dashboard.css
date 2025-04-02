@@ -1,0 +1,77 @@
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: black;
+    color: white;
+    padding: 20px;
+    position: relative;
+  }
+  
+  .back-arrow {
+    font-size: 2rem;
+    color: white;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    cursor: pointer;
+  }
+  
+  .dashboard-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .toggleinfo {
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: #03a9f4;
+    text-align: center;
+  }
+  
+  .panelinfo {
+    background: #333;
+    color: #f4f4f4;
+    padding: 15px;
+    border-radius: 8px;
+    width: 50%;
+    margin: 0 auto 20px;
+  }
+  
+  .album-options {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .album-button {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-radius: 8px;
+    background: linear-gradient(to right, #4A00E0, #8E2DE2);
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .album-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .album-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  
+  .album-description {
+    font-size: 0.9rem;
+    color: #e0e0e0;
+  }

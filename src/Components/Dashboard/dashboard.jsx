@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import "./dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [visibleInfo, setVisibleInfo] = useState(false);
 
   const handleSelection = (option) => {
     if (option === "memory_album") {
@@ -14,43 +16,59 @@ const Dashboard = () => {
     }
   };
 
+  const infoToggle = () => {
+    setVisibleInfo((prev) => !prev);
+  };
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">
-        What type of album do you want to create?
-      </h1>
-      <p className="text-blue-400 mb-8 cursor-pointer text-center">Which album suits you? ➕</p>
-      
-      <div className="flex flex-col gap-5 w-full max-w-md"  style={{width: "400px",gap:"20px",marginLeft:"35%"}}>
+    <div className="dashboard-container">
+     
+      <h1 className="dashboard-title">What type of album do you want to create?</h1>
+      <p className="toggleinfo" onClick={infoToggle}>
+        Which album suits you? ➕
+      </p>
+
+      {visibleInfo && (
+        <div className="panelinfo">
+          <h3>Which album suits you?</h3>
+          <p>
+            Choose a <code>Memory Album</code> for personal collections like family or pets.<br />
+            Select an <code>Event Album</code> for gatherings like weddings or birthdays.<br />
+            You can also <code>Join existing albums</code> shared by others!
+          </p>
+        </div>
+      )}
+
+      <div className="album-options">
         <button
+          className="album-button memory-album"
           onClick={() => handleSelection("memory_album")}
-          className="w-full flex items-center p-5 bg-purple-600 rounded-xl hover:bg-purple-500 transition shadow-lg"style={{width:"400px",borderRadius:"50px"}}
         >
-          <span className="mr-3">📷</span>
+          <span className="icon">📷</span>
           <div>
-            <p className="font-semibold text-lg">Create memory album</p>
-            <p className="text-sm text-gray-200">Partner, family, friends, pet, son/daughter...</p>
+            <p className="album-title">Create Memory Album</p>
+            <p className="album-description">Partner, family, friends, pet, son/daughter...</p>
           </div>
         </button>
 
         <button
+          className="album-button event-album"
           onClick={() => handleSelection("event_album")}
-          className="w-full flex items-center p-5 bg-blue-600 rounded-xl hover:bg-blue-500 transition shadow-lg"style={{width:"400px",borderRadius:"50px"}}
         >
-          <span className="mr-3">🎉</span>
+          <span className="icon">🎉</span>
           <div>
-            <p className="font-semibold text-lg">Create event album</p>
-            <p className="text-sm text-gray-200">Weddings, birthdays, celebrations...</p>
+            <p className="album-title">Create Event Album</p>
+            <p className="description">Weddings, birthdays, celebrations...</p>
           </div>
         </button>
 
         <button
+          className="album-button join-album"
           onClick={() => handleSelection("join_album")}
-          className="w-full flex items-center p-5 bg-indigo-600 rounded-xl hover:bg-indigo-500 transition shadow-lg"style={{width:"400px",borderRadius:"50px"}}
         >
-          <span className="mr-3">🔗</span>
+          <span className="album-icon">🔗</span>
           <div>
-            <p className="font-semibold text-lg">I want to join an album</p>
+            <p className="album-title">I want to join an album</p>
           </div>
         </button>
       </div>
