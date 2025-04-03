@@ -1,16 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Navbar1 from './Components/Navbar/navbar';
-import Signup from './Components/Authentication/Signup/signup';
-import Login from './Components/Authentication/Login/login';
-import Home from './Components/Home/Home';
-import Dashboard from './Components/Dashboard/dashboard';
-import MemoryAlbum from './Components/Dashboard/memory_album';
-import EventAlbum from './Components/Dashboard/event_album';
-import FriendsPage from './Components/Dashboard/friend';
-
-import { onAuthStateChanged } from 'firebase/auth';
-import { author } from './authconfig';
+import React, { useState, useEffect } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import Navbar1 from "./Components/Navbar/navbar";
+import Signup from "./Components/Authentication/Signup/signup";
+import Login from "./Components/Authentication/Login/login";
+import Dashboard from "./Components/Dashboard/dashboard";
+import MemoryAlbum from "./Components/Dashboard/memory_album";
+import EventAlbum from "./Components/Dashboard/event_album";
+import FriendsPage from "./Components/Dashboard/friend";
+import { onAuthStateChanged, signOut } from "firebase/auth";
+import { author } from "./authconfig";
 
 const App = () => {
   const [user, setUser] = useState(null);
@@ -19,14 +17,16 @@ const App = () => {
   const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
-    const userLoggedIn = onAuthStateChanged(author, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(author, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
     });
-    return () => userLoggedIn();
-  }, []);
+    return () => unsubscribe();
+  }, []); // ✅ Runs only once when the component mounts
 
-  console.log(user);
+  const handleLogout = () => {
+    signOut(author).then(() => setUser(null));
+  };
 
   if (loading) {
     return <h1>Loading, please wait...</h1>;
@@ -40,20 +40,32 @@ const App = () => {
           handleShowLogin={() => setShowLogin(true)}
         />
       )}
+
       <Signup show={showSignup} handleClose={() => setShowSignup(false)} />
       <Login show={showLogin} handleClose={() => setShowLogin(false)} />
 
       <Routes>
-        <Route path="/home" element={<Home />} />
-        {!user ? (
-          <Route path="/home" element={<Home />} />
-        ) : (
-          <Route path="/dashboard" element={<Dashboard/>} />
-        )}
-        <Route path="/memory-album" element={<MemoryAlbum />} />
-        <Route path="/event-album" element={<EventAlbum />} />
-        <Route path="/friends" element={<FriendsPage />} />
+        <Route path="/" element={user ? <Navigate to="/dashboard" /> : <Navigate to="/signup" />} />
+        <Route path="/signup" element={user ? <Navigate to="/dashboard" /> : <Signup />} />
+        <Route path="/login" element={user ? <Navigate to="/dashboard" /> : <Login />} />
 
+        {user ? (
+          <>
+            <Route path="/dashboard" element={<Dashboard onLogout={handleLogout} />} />
+            <Route path="/memory-album" element={<MemoryAlbum />} />
+            <Route path="/event-album" element={<EventAlbum />} />
+            <Route path="/friends" element={<FriendsPage />} />
+          </>
+        ) : (
+          <>
+            <Route path="/dashboard" element={<Navigate to="/signup" />} />
+            <Route path="/memory-album" element={<Navigate to="/signup" />} />
+            <Route path="/event-album" element={<Navigate to="/signup" />} />
+            <Route path="/friends" element={<Navigate to="/signup" />} />
+          </>
+        )}
+
+        <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </div>
   );
