@@ -29,7 +29,17 @@ const EventAlbum = () => {
     { name: "Reunion", icon: <FaHandshake /> },
     { name: "Others", icon: <FaEllipsisH /> },
   ];
-
+  const handleAlbumCategory=(event)=>{
+    const albumCategories=[
+      "Wedding","Birthday","Festival","Anniversary",
+      "Conference","Concert","Trip","Graduation","Competition","Reunion","Others"]
+    if(albumCategories.includes(event)){
+      navigate(`/category-album?type=${event}`)
+    }
+    else{
+      navigate(`/memory_vault`)
+    }
+  }
   return (
     <div className="w-full h-screen p-4 flex flex-col items-center justify-center bg-black text-white">
       <div className="back-arrow" onClick={() => navigate("/dashboard")}>
@@ -61,6 +71,7 @@ const EventAlbum = () => {
               cursor: "pointer",
               transition: "transform 0.3s ease, box-shadow 0.3s ease",
             }}
+            onClick={()=>handleAlbumCategory(event.name)}
             onMouseOver={(e) => {
               e.target.style.transform = "scale(1.05)";
               e.target.style.boxShadow = "0 8px 12px rgba(0, 0, 0, 0.2)";

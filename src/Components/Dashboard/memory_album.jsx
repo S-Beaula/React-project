@@ -1,12 +1,12 @@
-import React from "react";
+import React, { Component } from "react";
 import { FaUserFriends, FaHeart, FaHome, FaChild, FaPaw, FaUser, FaBriefcase, FaSchool, FaUsers, FaPaintBrush, FaEllipsisH } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import FriendsPage from "./friend";
+import FriendsPage from "./album_category";
 const MemoryAlbum = () => {
   const navigate=useNavigate()
   const categories = [
-        { name: "Friends", icon: <FaUserFriends />,path:"/friends"},
-        { name: "Couple", icon: <FaHeart /> },
+        { name: "Friends", icon: <FaUserFriends />},
+        { name: "Couple", icon: <FaHeart />,},
         { name: "Family", icon: <FaHome /> },
         { name: "Child", icon: <FaChild /> },
         { name: "Pet", icon: <FaPaw /> },
@@ -17,6 +17,19 @@ const MemoryAlbum = () => {
         { name: "Hobby", icon: <FaPaintBrush /> },
         { name: "Others", icon: <FaEllipsisH /> },
       ];
+      const handleCategoryAlbums = (category) => {
+        const memoryCategories = [
+          "Friends", "Couple", "Family", "Child", "Pet",
+          "Individual", "Work", "Class", "Team", "Hobby", "Others"
+        ];
+      
+        if (memoryCategories.includes(category)) {
+          navigate(`/category-album?type=${category}`);
+        } else {
+          navigate("/memory_vault");
+        }
+      };
+      
   return (
     <div className="w-full h-screen p-4 flex flex-col items-center justify-center bg-black text-white">
        <div className="back-arrow" onClick={() => navigate("/dashboard")}>
@@ -49,7 +62,7 @@ const MemoryAlbum = () => {
               cursor: "pointer",
               transition: "transform 0.3s ease, box-shadow 0.3s ease",
             }}
-            onClick={() => navigate(category.path)}
+            onClick={() => handleCategoryAlbums(category.name)}
 
             onMouseOver={(e) => {
               e.target.style.transform = "scale(1.05)";

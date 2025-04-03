@@ -6,7 +6,7 @@ import Login from "./Components/Authentication/Login/login";
 import Dashboard from "./Components/Dashboard/dashboard";
 import MemoryAlbum from "./Components/Dashboard/memory_album";
 import EventAlbum from "./Components/Dashboard/event_album";
-import FriendsPage from "./Components/Dashboard/friend";
+import AlbumCategory from "./Components/Dashboard/album_category";
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { author } from "./authconfig";
 
@@ -22,7 +22,7 @@ const App = () => {
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []); // ✅ Runs only once when the component mounts
+  }, []); 
 
   const handleLogout = () => {
     signOut(author).then(() => setUser(null));
@@ -54,7 +54,8 @@ const App = () => {
             <Route path="/dashboard" element={<Dashboard onLogout={handleLogout} />} />
             <Route path="/memory-album" element={<MemoryAlbum />} />
             <Route path="/event-album" element={<EventAlbum />} />
-            <Route path="/friends" element={<FriendsPage />} />
+            <Route path="/category-album" element={<AlbumCategory />} />
+
           </>
         ) : (
           <>
