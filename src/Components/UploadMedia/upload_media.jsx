@@ -1,40 +1,36 @@
 import React, { useState } from "react";
-import { storage, author } from "../../authconfig";
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import imageCompression from "browser-image-compression";
-import { toast } from "react-toastify";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "react-toastify/dist/ReactToastify.css";
+import axios from "axios";
 
-const UploadMedia = ({ category }) => {
+const UploadMedia = () => {
   const [file, setFile] = useState(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [error, setError] = useState("");
+  const [preview, setPreview] = useState(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedUrl, setUploadedUrl] = useState("");
+  const [error, setError] = useState(""); 
 
-  const validTypes = ["image/jpeg", "image/png", "video/mp4", "video/mov"];
+  const CLOUD_NAME = "dxhaawto2"; 
+  const UPLOAD_PRESET = "mbvzl2fa"; 
 
-  const handleFileChange = async (e) => {
+  const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (!selectedFile) return;
 
-    if (!validTypes.includes(selectedFile.type)) {
-      setError("Unsupported file type! Only JPG, PNG, MP4, and MOV are allowed.");
+    const fileType = selectedFile.type;
+    const fileSize = selectedFile.size; 
+
+    if (fileType.startsWith('image/') && fileSize > (2 * 1024 * 1024)) { 
+      alert('Image must be less than 2MB');
       return;
     }
 
-    if (selectedFile.size > 10 * 1024 * 1024) {
-      toast.info("File is large, compressing...");
-      try {
-        const options = { maxSizeMB: 1, maxWidthOrHeight: 1920 };
-        const compressedFile = await imageCompression(selectedFile, options);
-        setFile(compressedFile);
-      } catch (error) {
-        setError("Compression failed.");
-        console.error(error);
-      }
-    } else {
-      setFile(selectedFile);
+    if (fileType.startsWith('video/') && fileSize > (10 * 1024 * 1024)) { 
+      alert('Video must be less than 10MB');
+      return;
     }
+
+    setFile(selectedFile);
+    setPreview(URL.createObjectURL(selectedFile));
+    setError(""); 
   };
 
   const handleUpload = async () => {
@@ -43,71 +39,87 @@ const UploadMedia = ({ category }) => {
       return;
     }
 
-    setError("");
-    const user = author.currentUser;
-    if (!user) {
-      setError("You need to be logged in to upload!");
-      return;
+    try {
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", UPLOAD_PRESET);
+
+      const response = await axios.post(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log("Uploaded to Cloudinary:", response.data.secure_url);
+      setUploadedUrl(response.data.secure_url);
+
+      setError("");
+      alert("Upload successful!");
+    } catch (error) {
+      console.error("Upload failed:", error.response?.data?.error?.message || error.message);
+      setError(error.response?.data?.error?.message || "Upload failed!");
+    } finally {
+      setUploading(false);
     }
-
-    const filePath = `albums/${category}/${user.uid}_${Date.now()}_${file.name}`;
-    const storageRef = ref(storage, filePath);
-    const uploadTask = uploadBytesResumable(storageRef, file);
-
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        setUploadProgress(progress);
-      },
-      (error) => {
-        setError("Upload failed!");
-        console.error(error);
-      },
-      async () => {
-        const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-        toast.success("Upload successful!");
-        console.log("File available at:", downloadURL);
-      }
-    );
   };
 
   return (
-    <div className="container-fluid d-flex justify-content-center align-items-center vh-100 bg-dark text-white">
-      <div className="w-50 text-center mb-5">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <button className="btn btn-outline-light">←</button>
-          <h2>Upload Media</h2>
-          <button className="btn btn-outline-light">Next</button>
-        </div>
+    <div className="container text-center mt-5">
+      <h2>Upload Image or Video</h2>
 
-        <div className="bg-secondary rounded w-100 d-flex align-items-center justify-content-center" style={{ height: "200px" }}>
-          {file ? (
-            <img src={URL.createObjectURL(file)} alt="Preview" className="w-100 h-70 rounded" />
+      <input
+        type="file"
+        accept="image/*,video/*"
+        onChange={handleFileChange}
+      />
+
+      {preview && (
+        <div className="mt-3">
+          <h4>Preview:</h4>
+          {file?.type.startsWith("image/") ? (
+            <img
+              src={preview}
+              alt="preview"
+              style={{ width: "300px", height: "auto", borderRadius: "8px" }}
+            />
           ) : (
-            <label className="d-flex flex-column align-items-center cursor-pointer">
-              <span className="text-light">📷</span>
-              <span className="text-light">Cover Photo</span>
-              <input type="file" className="d-none" onChange={handleFileChange} />
-            </label>
+            <video
+              src={preview}
+              controls
+              width="300"
+              style={{ borderRadius: "8px" }}
+            />
           )}
         </div>
+      )}
 
-        {uploadProgress > 0 && (
-          <div className="mt-2">
-            <div className="progress">
-              <div className="progress-bar bg-primary" role="progressbar" style={{ width: `${uploadProgress}%` }}></div>
-            </div>
-            <p className="text-light mt-1">Upload Progress: {uploadProgress.toFixed(2)}%</p>
-          </div>
-        )}
+      <button
+        className="btn btn-primary mt-3"
+        onClick={handleUpload}
+        disabled={uploading}
+      >
+        {uploading ? "Uploading..." : "Upload"}
+      </button>
 
-        {error && <p className="text-danger mt-2">{error}</p>}
+      {error && (
+        <div className="alert alert-danger mt-3" role="alert">
+          {error}
+        </div>
+      )}
 
-        <button onClick={handleUpload} className="btn btn-primary w-100 mt-4" disabled={!file}>
-          Upload
-        </button>
-      </div>
+      {uploadedUrl && (
+        <div className="mt-4">
+          <h4>Uploaded Successfully!</h4>
+          <a href={uploadedUrl} target="_blank" rel="noopener noreferrer">
+            View Uploaded Media
+          </a>
+        </div>
+      )}
     </div>
   );
 };
