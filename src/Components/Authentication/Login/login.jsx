@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { author } from '../../../authconfig';
+import { auth } from '../../../authconfig';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
@@ -22,7 +22,7 @@ const Login = ({ show, handleClose }) => {
     const { email, password } = loginDetails;
 
     try {
-      await signInWithEmailAndPassword(author, email, password);
+      await signInWithEmailAndPassword(auth, email, password);
       Swal.fire({
         icon: 'success',
         title: 'Login Successful!',

@@ -2,7 +2,6 @@ import React from "react";
 import UploadMedia from "../UploadMedia/upload_media";
 import { useNavigate, useLocation } from "react-router-dom";
 
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const AlbumCategory = () => {

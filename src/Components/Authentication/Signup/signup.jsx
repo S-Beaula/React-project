@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { author, db } from '../../../authconfig';
+import { auth, db } from '../../../authconfig';
 import { set, ref } from 'firebase/database';
 import Swal from 'sweetalert2';
 
@@ -27,7 +27,7 @@ const SignUp = ({ show, handleClose }) => {
     }
 
     try {
-      const signupUsers = await createUserWithEmailAndPassword(author, email, password);
+      const signupUsers = await createUserWithEmailAndPassword(auth, email, password);
       const signUpUsersCredentials = signupUsers.user;
 
       await updateProfile(signUpUsersCredentials, { displayName: name });

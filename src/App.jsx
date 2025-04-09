@@ -8,7 +8,8 @@ import MemoryAlbum from "./Components/Dashboard/memory_album";
 import EventAlbum from "./Components/Dashboard/event_album";
 import AlbumCategory from "./Components/Dashboard/album_category";
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { author } from "./authconfig";
+import { auth } from "./authconfig";
+import GalleryUploads from "./Components/UploadMedia/gallery";
 import UploadMedia from "./Components/UploadMedia/upload_media";
 
 const App = () => {
@@ -18,7 +19,7 @@ const App = () => {
   const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(author, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       setLoading(false);
     });
@@ -26,7 +27,7 @@ const App = () => {
   }, []);
 
   const handleLogout = () => {
-    signOut(author).then(() => setUser(null));
+    signOut(auth).then(() => setUser(null));
   };
 
   if (loading) {
@@ -59,6 +60,7 @@ const App = () => {
             <Route path="/event-album" element={<EventAlbum />} />
             <Route path="/category-album" element={<AlbumCategory />} />
             <Route path="/upload-media" element={<UploadMedia />} />
+            <Route path="/gallery" element={<GalleryUploads />} />
           </>
         ) : (
           <>
@@ -67,6 +69,8 @@ const App = () => {
             <Route path="/event-album" element={<Navigate to="/signup" />} />
             <Route path="/category-album" element={<Navigate to="/signup" />} />
             <Route path="/upload-media" element={<Navigate to="/signup" />} />
+            <Route path="/gallery" element={<Navigate to="/signup" />} />
+            <Route path="/albumlist" element={<Navigate to="/signup" />} />
           </>
         )}
 
