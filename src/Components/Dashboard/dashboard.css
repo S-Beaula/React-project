@@ -119,3 +119,45 @@
 .icon {
   font-size: 2rem;
 }
+@media (max-width: 600px) {
+  .dashboard-title {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .header-buttons {
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+    margin-top: 15px;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    padding: 0 10px;
+  }
+
+  .panelinfo {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .album-options {
+    width: 100%;
+    padding: 0 10px;
+  }
+
+  .album-button {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+  }
+
+  .album-title {
+    font-size: 1.1rem;
+  }
+
+  .album-description {
+    font-size: 0.85rem;
+  }
+}

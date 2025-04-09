@@ -19,7 +19,7 @@ const Dashboard = ({ onLogout }) => {
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1 className="dashboard-title">Welcome to the Dashboard!</h1>
+        <h1 className="dashboard-title">Welcome to the Memory Vault!</h1>
         <div className="header-buttons">
           <button
             className="header-btn gallery-btn"
