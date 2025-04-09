@@ -23,7 +23,7 @@ const UploadMedia = () => {
     const fileSize = selectedFile.size;
 
     if (fileType.startsWith("image/") && fileSize > 5 * 1024 * 1024) {
-      alert("Image must be less than 2MB");
+      alert("Image must be less than 5MB");
       return;
     }
 
