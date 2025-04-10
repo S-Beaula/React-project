@@ -124,6 +124,7 @@ const UploadMedia = () => {
             <option value="Friends">Friends</option>
             <option value="Family">Family</option>
             <option value="Travel">Travel</option>
+            <option value="Events">Events</option>
             <option value="Work">Work</option>
           </select>
         </div>
