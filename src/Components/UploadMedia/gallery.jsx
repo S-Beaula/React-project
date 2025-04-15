@@ -74,8 +74,13 @@ const GalleryUploads = () => {
 
   return (
     <div className="container mt-5">
-      <div className="back-arrow" onClick={() => navigate("/dashboard")} style={{ cursor: "pointer" }}>
-        ↩
+       <div className="w-100 d-flex justify-content-start ps-3 mb-3">
+        <button
+          className="btn btn-outline-dark bg-white text-black"
+          onClick={() => navigate("/dashboard")}
+        >
+          ↩ Back
+        </button>
       </div>
       <h2 className="text-center">My Gallery</h2>
       <h2 className="text-center mb-4">Select an Album</h2>
